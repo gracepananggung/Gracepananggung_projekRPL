@@ -1,9 +1,9 @@
 package com.example.gracepananggung
 
-import android.content.Intent
-import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+    import android.content.Intent
+    import android.os.Bundle
+    import android.widget.Toast
+    import androidx.appcompat.app.AppCompatActivity
 import com.example.gracepananggung.databinding.ActivityRegister2Binding
 
 class RegisterActivity2 : AppCompatActivity() {
