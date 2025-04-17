@@ -1,6 +1,7 @@
 package com.example.gracepananggung
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,12 @@ import com.example.gracepananggung.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var RecyclerView : RecyclerView
+    private lateinit var list: ArrayList<Image>
+    private lateinit var myAdapter: MyAdapter
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
