@@ -1,35 +1,19 @@
-package com.example.gracepananggung
+import com.google.firebase.Timestamp
+import java.io.Serializable
 
-import android.os.Parcel
-import android.os.Parcelable
+// Data untuk daftar peminjaman buku
+data class Peminjaman(
+    var id: String? = null,
+    var nama: String = "",
+    var judul: String = "",
+    var jumlah: Int = 0,
+    var tanggalPinjam: Timestamp? = null,
+    var tanggalKembali: Timestamp? = null
+)
 
-data class ItemData(val gambar : Int, val judul : String, val genre : String, val descripsi : String) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readInt(),
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(gambar)
-        parcel.writeString(judul)
-        parcel.writeString(genre)
-        parcel.writeString(descripsi)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<ItemData> {
-        override fun createFromParcel(parcel: Parcel): ItemData {
-            return ItemData(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ItemData?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+// Data untuk buku (tanpa gambar)
+data class Buku(
+    var id: String? = null,
+    var judul: String = "",
+    var deskripsi: String = ""
+) : Serializable

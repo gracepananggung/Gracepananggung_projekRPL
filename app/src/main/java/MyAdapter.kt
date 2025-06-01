@@ -1,39 +1,55 @@
 package com.example.gracepananggung
 
+import Buku
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MyAdapter(private val namaList: ArrayList<ItemData>) :
-    RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class MyAdapter(
+    private val bukuList: List<Buku>,
+    private val isAdmin: Boolean = false,
+    private val onEditClick: ((Buku) -> Unit)? = null,
+    private val onDeleteClick: ((Buku) -> Unit)? = null,
+    private val onItemClick: ((Buku) -> Unit)? = null
+) : RecyclerView.Adapter<MyAdapter.BukuViewHolder>() {
 
-    var onItemClick: ((ItemData) -> Unit)? = null
-
-    class MyViewHolder(itemData: View) : RecyclerView.ViewHolder(itemData) {
-        val gambar: ImageView = itemData.findViewById(R.id.gambar1)
-        val judul: TextView = itemData.findViewById(R.id.judul1)
-        val genre: TextView = itemData.findViewById(R.id.genre1)
+    inner class BukuViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val judulTextView: TextView = itemView.findViewById(R.id.judul1)
+        val deskripsiTextView: TextView = itemView.findViewById(R.id.deskripsi1)
+        val btnEdit: Button = itemView.findViewById(R.id.btn_edit)
+        val btnHapus: Button = itemView.findViewById(R.id.btn_hapus)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemData = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_data, parent, false)
-        return MyViewHolder(itemData)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BukuViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_data, parent, false)
+        return BukuViewHolder(view)
     }
 
-    override fun getItemCount(): Int = namaList.size
+    override fun onBindViewHolder(holder: BukuViewHolder, position: Int) {
+        val buku = bukuList[position]
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val item = namaList[position]
-        holder.gambar.setImageResource(item.gambar)
-        holder.judul.text = item.judul
-        holder.genre.text = item.genre
+        holder.judulTextView.text = buku.judul
+        holder.deskripsiTextView.text = buku.deskripsi
 
+        if (isAdmin) {
+            holder.btnEdit.visibility = View.VISIBLE
+            holder.btnHapus.visibility = View.VISIBLE
+
+            holder.btnEdit.setOnClickListener { onEditClick?.invoke(buku) }
+            holder.btnHapus.setOnClickListener { onDeleteClick?.invoke(buku) }
+        } else {
+            holder.btnEdit.visibility = View.GONE
+            holder.btnHapus.visibility = View.GONE
+        }
+
+        // ⬇️ Tambahkan klik item untuk user
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(item)
+            onItemClick?.invoke(buku)
         }
     }
+
+    override fun getItemCount(): Int = bukuList.size
 }

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "205941290804",
+    "firebase_url": "https://myfirebase-75d9e-default-rtdb.firebaseio.com",
+    "project_id": "myfirebase-75d9e",
+    "storage_bucket": "myfirebase-75d9e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205941290804:android:d6d59a7ef9fe1447639761",
+        "android_client_info": {
+          "package_name": "com.example.gracepananggung"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi8JpyGeb-g7Q83IeaT-dxKiMGtnUx0Uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,17 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#fff"
+    android:background="@android:color/holo_blue_bright"
     tools:context="com.example.gracepananggung.MainActivity">
 
-
+    <!-- logo -->
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="171dp"
         android:layout_height="140dp"
         android:layout_gravity="center"
         android:layout_marginTop="67dp"
-        app:srcCompat="@drawable/log0" />
+        app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/textView"
@@ -29,6 +29,7 @@
         android:textSize="22dp"
         android:textStyle="bold" />
 
+    <!-- input email -->
     <EditText
         android:id="@+id/editTextTextEmailAddress2"
         android:layout_width="307dp"
@@ -39,6 +40,7 @@
         android:hint="Email"
         android:layout_marginTop="60dp"/>
 
+    <!-- input password -->
     <EditText
         android:id="@+id/editTextTextPassword2"
         android:layout_width="307dp"
@@ -49,6 +51,20 @@
         android:hint="Password"
         android:layout_marginTop="30dp"/>
 
+    <!-- lupa password -->
+    <TextView
+        android:id="@+id/textForgetPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lupa Password?"
+        android:textColor="#EB2768"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+
+    <!-- tombol login -->
     <Button
         android:id="@+id/buttonLogin"
         android:layout_width="135dp"
@@ -66,6 +82,7 @@
         android:layout_height="68dp"
         android:orientation="horizontal">
 
+        <!-- belum punya akun? -->
         <TextView
             android:id="@+id/textView2"
             android:layout_width="160dp"
@@ -74,8 +91,10 @@
             android:layout_marginLeft="50dp"
             android:gravity="right"
             android:text="Belum punya akun?"
-            android:textSize="14dp" />
+            android:textSize="14dp"
+            android:textStyle="bold"/>
 
+        <!-- register -->
         <TextView
             android:id="@+id/textRegister"
             android:layout_width="24dp"
@@ -84,7 +103,7 @@
             android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:text="Register"
-            android:textColor="#FF66B2"
+            android:textColor="#EB2768"
             android:textSize="14dp" />
     </LinearLayout>
 

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_bright"
+    android:textColor="@color/colorOnBackground"
+    android:padding="24dp"
+    tools:context=".ProfileActivity">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="117dp"
+            android:layout_height="97dp"
+            android:layout_gravity="center"
+            android:contentDescription="Foto Profil"
+            android:background="@drawable/pp"/>
+
+        <TextView
+            android:id="@+id/profileTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Grace Sesilia Pananggung"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp" />
+
+    </LinearLayout>
+
+    <!-- BIRTHDAY -->
+    <TextView
+        android:id="@+id/birthday"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="12 - januari - 2000"
+        android:textSize="14sp"
+        android:drawableStart="@drawable/ic_calender"
+        android:drawablePadding="12dp"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_rounded_box"
+        android:layout_gravity="center"/>
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="gracepananggung.com"
+        android:textSize="14sp"
+        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="12dp"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_rounded_box"
+        android:layout_gravity="center"/>
+
+    <!-- No HP -->
+    <TextView
+        android:id="@+id/no_hp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="0812-3456-7890"
+        android:textSize="14sp"
+        android:drawableStart="@drawable/ic_wa"
+        android:drawablePadding="12dp"
+        android:padding="10dp"
+        android:background="@drawable/bg_rounded_box"
+        android:layout_gravity="center"/>
+
+    <!-- tombol edit -->
+    <TextView
+        android:id="@+id/edit"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:textSize="14sp"
+        android:drawableStart="@drawable/ic_edit"
+        android:drawablePadding="11dp"
+        android:padding="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_rounded_box" />
+
+</LinearLayout>
