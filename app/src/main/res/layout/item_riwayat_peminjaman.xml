@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <TextView
+            android:id="@+id/tvNamaRiwayat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nama Peminjam"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tvJudulRiwayat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Judul Buku" />
+
+        <TextView
+            android:id="@+id/tvJumlahRiwayat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jumlah Buku" />
+
+        <TextView
+            android:id="@+id/tvTanggalPinjamRiwayat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tanggal Pinjam" />
+
+        <TextView
+            android:id="@+id/tvTanggalKembaliRiwayat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tanggal Pinjam" />
+
+        <!-- Garis bawah -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="#000000" />
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

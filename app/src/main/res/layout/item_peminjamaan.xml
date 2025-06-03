@@ -20,7 +20,7 @@
             android:id="@+id/tvNama"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nama:"
+            android:text="Nama Peminjam:"
             android:textColor="#000000"
             android:textStyle="bold"
             android:textSize="16sp" />
@@ -29,7 +29,7 @@
             android:id="@+id/tvJudul"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Judul:"
+            android:text="Judul Buku:"
             android:textColor="#000000"
             android:textSize="15sp" />
 
@@ -37,7 +37,7 @@
             android:id="@+id/tvJumlah"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jumlah:"
+            android:text="Jumlah Buku:"
             android:textColor="#000000"
             android:textSize="15sp" />
 

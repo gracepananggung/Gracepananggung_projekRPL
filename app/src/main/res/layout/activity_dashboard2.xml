@@ -14,7 +14,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPeminjaman"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="616dp"
         android:layout_weight="1"
         android:paddingBottom="8dp" />
 
@@ -30,11 +30,11 @@
         <Button
             android:id="@+id/buttonpinjam"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:backgroundTint="#F4CFF4"
             android:text="Pinjam Buku"
             android:textColor="#575454"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:paddingHorizontal="32dp"
             android:paddingVertical="8dp" />

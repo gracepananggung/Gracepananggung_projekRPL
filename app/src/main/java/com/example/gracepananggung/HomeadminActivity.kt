@@ -1,12 +1,15 @@
 package com.example.gracepananggung
 
-import Buku
+import com.example.gracepananggung.Buku
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +27,7 @@ class HomeadminActivity : AppCompatActivity() {
     private lateinit var bukuAdapter: MyAdapter
     private lateinit var searchView: SearchView
     private lateinit var btnTambahBuku: Button
+    private lateinit var textRiwayat: TextView
 
     private val semuaBuku = mutableListOf<Buku>()
     private val bukuFiltered = mutableListOf<Buku>()
@@ -42,6 +46,12 @@ class HomeadminActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewAdmin)
         searchView = findViewById(R.id.searchViewadmin)
         btnTambahBuku = findViewById(R.id.btnTambahBuku)
+        textRiwayat = findViewById(R.id.textRiwayat)
+
+        textRiwayat.setOnClickListener {
+            Log.d("HomedAdmin", "Tombol lihat riwayat di klik")
+            startActivity(Intent(this, RiwayatActivity::class.java))
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -50,7 +60,7 @@ class HomeadminActivity : AppCompatActivity() {
             bukuFiltered,
             isAdmin = true,
             onEditClick = { buku ->
-                // Tambahkan logika edit di sini jika ingin
+                showEditDialog(buku)
             },
             onDeleteClick = { buku ->
                 AlertDialog.Builder(this)
@@ -145,6 +155,44 @@ class HomeadminActivity : AppCompatActivity() {
         }
         bukuAdapter.notifyDataSetChanged()
     }
+    
+    //tombol edit
+    private fun showEditDialog(buku: Buku) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_buku, null)
+        val etEditJudul = dialogView.findViewById<EditText>(R.id.etEditJudul)
+        val etEditDeskripsi = dialogView.findViewById<EditText>(R.id.etEditDeskripsi)
+
+        etEditJudul.setText(buku.judul)
+        etEditDeskripsi.setText(buku.deskripsi)
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit Buku")
+            .setView(dialogView)
+            .setPositiveButton("Simpan") { dialog, _ ->
+                val judulBaru = etEditJudul.text.toString().trim()
+                val deskripsiBaru = etEditDeskripsi.text.toString().trim()
+
+                if (judulBaru.isNotEmpty() && deskripsiBaru.isNotEmpty()) {
+                    val db = FirebaseFirestore.getInstance()
+                    db.collection("buku").document(buku.id ?: "")
+                        .update("judul", judulBaru, "deskripsi", deskripsiBaru)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Buku diperbarui", Toast.LENGTH_SHORT).show()
+                            ambilDataDariFirestore() // ✅ Perbaikan di sini
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Gagal update", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, "Form tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                }
+
+                dialog.dismiss()
+            }
+            .setNegativeButton("Batal") { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
 
     //tombol tambah buku
     private fun showTambahBukuDialog() {

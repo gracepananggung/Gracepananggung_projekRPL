@@ -1,6 +1,6 @@
 package com.example.gracepananggung
 
-import Peminjaman
+import com.example.gracepananggung.Peminjaman
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

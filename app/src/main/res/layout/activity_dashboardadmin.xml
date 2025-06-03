@@ -11,17 +11,19 @@
     tools:context=".DashboardAdminActivity">
 
     <!-- SearchView -->
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchdashadmin"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/search_background"
         android:iconifiedByDefault="false"
         android:queryHint="Cari novel berdasarkan judul atau genre"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAdmin"
@@ -40,17 +42,17 @@
         android:id="@+id/textlanjut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
         android:text="Halaman berikut→"
         android:textColor="#F87ED1"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/recyclerViewAdmin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="10dp" />
+        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewAdmin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

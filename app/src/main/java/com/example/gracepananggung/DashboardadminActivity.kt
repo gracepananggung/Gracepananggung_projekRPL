@@ -1,12 +1,12 @@
 package com.example.gracepananggung
 
-import Peminjaman
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,9 +19,11 @@ class DashboardAdminActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var peminjamanAdapter: PeminjamanAdapter
-    private val peminjamanList = mutableListOf<Peminjaman>()
+    private val semuaPeminjaman = mutableListOf<Peminjaman>()
+    private val filteredPeminjaman = mutableListOf<Peminjaman>()
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var textlanjut: TextView
+    private lateinit var searchView: SearchView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +35,7 @@ class DashboardAdminActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewAdmin)
         recyclerView.layoutManager = LinearLayoutManager(this)
         textlanjut = findViewById(R.id.textlanjut)
+        searchView = findViewById(R.id.searchdashadmin)
 
         textlanjut.setOnClickListener {
             Log.d("DashboardAdmin", "Tombol halaman berikut diklik")
@@ -42,25 +45,27 @@ class DashboardAdminActivity : AppCompatActivity() {
         peminjamanAdapter = PeminjamanAdapter(
             isAdmin = true,
             onDeleteClick = { peminjaman ->
-                peminjaman.id?.let { id -> hapusDataPeminjaman(id) }
+                hapusPeminjaman(peminjaman)
             }
         )
+
         recyclerView.adapter = peminjamanAdapter
 
         ambilDataPeminjaman()
+        setupSearch()
     }
 
     private fun ambilDataPeminjaman() {
         FirebaseFirestore.getInstance().collection("peminjaman")
             .get()
             .addOnSuccessListener { result ->
-                val list = mutableListOf<Peminjaman>()
+                semuaPeminjaman.clear()
                 for (document in result) {
                     val data = document.toObject(Peminjaman::class.java)
                     data.id = document.id
-                    list.add(data)
+                    semuaPeminjaman.add(data)
                 }
-                peminjamanAdapter.setData(list)
+                filterData("") // tampilkan semua data awal
             }
             .addOnFailureListener { exception ->
                 Log.e("DashboardAdmin", "Gagal mengambil data: ${exception.message}", exception)
@@ -68,17 +73,53 @@ class DashboardAdminActivity : AppCompatActivity() {
             }
     }
 
-    private fun hapusDataPeminjaman(id: String) {
-        FirebaseFirestore.getInstance().collection("peminjaman")
-            .document(id)
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Data berhasil dihapus", Toast.LENGTH_SHORT).show()
-                ambilDataPeminjaman()
+    private fun setupSearch() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                filterData(query ?: "")
+                return true
             }
-            .addOnFailureListener { exception ->
-                Log.e("DashboardAdmin", "Gagal menghapus data: ${exception.message}", exception)
-                Toast.makeText(this, "Gagal menghapus data", Toast.LENGTH_SHORT).show()
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterData(newText ?: "")
+                return true
+            }
+        })
+    }
+
+    private fun filterData(keyword: String) {
+        val keywordLower = keyword.lowercase().trim()
+        val result = if (keywordLower.isEmpty()) {
+            semuaPeminjaman
+        } else {
+            semuaPeminjaman.filter {
+                it.judul.lowercase().contains(keywordLower)
+            }
+        }
+        peminjamanAdapter.setData(result)
+    }
+
+    private fun hapusPeminjaman(peminjaman: Peminjaman) {
+        val id = peminjaman.id ?: return
+
+        val dataRiwayat = hashMapOf(
+            "nama" to peminjaman.nama,
+            "judul" to peminjaman.judul,
+            "jumlah" to peminjaman.jumlah,
+            "tanggalPinjam" to peminjaman.tanggalPinjam,
+            "tanggalKembali" to peminjaman.tanggalKembali
+        )
+
+        FirebaseFirestore.getInstance().collection("riwayat_peminjaman")
+            .add(dataRiwayat)
+            .addOnSuccessListener {
+                FirebaseFirestore.getInstance().collection("peminjaman")
+                    .document(id)
+                    .delete()
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Dipindahkan ke riwayat", Toast.LENGTH_SHORT).show()
+                        ambilDataPeminjaman()
+                    }
             }
     }
 

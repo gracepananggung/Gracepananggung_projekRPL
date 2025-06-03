@@ -1,6 +1,6 @@
 package com.example.gracepananggung
 
-import Peminjaman
+import com.example.gracepananggung.Peminjaman
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle

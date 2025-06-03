@@ -1,6 +1,6 @@
 package com.example.gracepananggung
 
-import Buku
+import com.example.gracepananggung.Buku
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

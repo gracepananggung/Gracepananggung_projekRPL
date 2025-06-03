@@ -21,6 +21,9 @@
         android:theme="@style/Theme.Gracepananggung"
         tools:targetApi="31">
         <activity
+            android:name=".RiwayatActivity"
+            android:exported="false" />
+        <activity
             android:name=".editbukuActivity"
             android:exported="false" />
         <activity

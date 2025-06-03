@@ -1,6 +1,6 @@
 package com.example.gracepananggung
 
-import Buku
+import com.example.gracepananggung.Buku
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
