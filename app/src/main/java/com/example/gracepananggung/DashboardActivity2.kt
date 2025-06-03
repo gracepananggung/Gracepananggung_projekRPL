@@ -1,8 +1,12 @@
 package com.example.gracepananggung
 
-import com.example.gracepananggung.Peminjaman
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -11,6 +15,9 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
@@ -48,7 +55,7 @@ class DashboardActivity2 : AppCompatActivity() {
         textSelamatDatang = findViewById(R.id.textSelamatDatang)
         recyclerView = findViewById(R.id.recyclerViewPeminjaman)
 
-        adapter = PeminjamanAdapter()
+        adapter = PeminjamanAdapter { peminjaman -> pindahkanKeRiwayat(peminjaman) }
         adapter.setData(daftarPeminjaman)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -62,6 +69,10 @@ class DashboardActivity2 : AppCompatActivity() {
         }
 
         ambilDataFirestore()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
+        }
     }
 
     private fun tampilkanDialogPinjamBuku() {
@@ -100,7 +111,7 @@ class DashboardActivity2 : AppCompatActivity() {
                 val tglKembali = Timestamp(sdf.parse(tglKembaliStr)!!)
 
                 val dataPeminjaman = Peminjaman(
-                    id = null, // Firestore akan mengisi ID saat data ditambahkan
+                    id = null,
                     nama = nama,
                     judul = judul,
                     jumlah = jumlah,
@@ -113,11 +124,11 @@ class DashboardActivity2 : AppCompatActivity() {
                     .addOnSuccessListener { docRef ->
                         dataPeminjaman.id = docRef.id
                         daftarPeminjaman.add(dataPeminjaman)
-                        adapter.setData(daftarPeminjaman) // ✅ Ganti dengan setData agar RecyclerView diperbarui
+                        adapter.setData(daftarPeminjaman)
                         Toast.makeText(this, "Peminjaman berhasil disimpan", Toast.LENGTH_SHORT).show()
+                        tampilkanNotifikasi(nama, judul)
                         dialog.dismiss()
                     }
-
                     .addOnFailureListener {
                         Toast.makeText(this, "Gagal menyimpan ke Firestore", Toast.LENGTH_SHORT).show()
                     }
@@ -143,6 +154,62 @@ class DashboardActivity2 : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this, "Gagal mengambil data", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun pindahkanKeRiwayat(peminjaman: Peminjaman) {
+        val riwayatData = hashMapOf(
+            "nama" to peminjaman.nama,
+            "judul" to peminjaman.judul,
+            "jumlah" to peminjaman.jumlah,
+            "tanggalPinjam" to peminjaman.tanggalPinjam,
+            "tanggalKembali" to peminjaman.tanggalKembali
+        )
+
+        db.collection("riwayat_peminjaman")
+            .add(riwayatData)
+            .addOnSuccessListener {
+                db.collection("peminjaman").document(peminjaman.id!!)
+                    .delete()
+                    .addOnSuccessListener {
+                        daftarPeminjaman.remove(peminjaman)
+                        adapter.setData(daftarPeminjaman)
+                        Toast.makeText(this, "Buku dikembalikan dan dipindahkan ke riwayat", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Gagal menghapus data lama", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Gagal menyimpan ke riwayat", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun tampilkanNotifikasi(nama: String, judul: String) {
+        val channelId = "peminjaman_channel"
+        val channelName = "Notifikasi Peminjaman"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle("Peminjaman Buku Berhasil")
+            .setContentText("$nama meminjam buku: $judul")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(this@DashboardActivity2)) {
+            if (ActivityCompat.checkSelfPermission(
+                    this@DashboardActivity2,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            notify(System.currentTimeMillis().toInt(), builder.build())
+        }
     }
 
     override fun onStart() {

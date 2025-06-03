@@ -10,7 +10,8 @@ data class Peminjaman(
     var judul: String = "",
     var jumlah: Int = 0,
     var tanggalPinjam: Timestamp? = null,
-    var tanggalKembali: Timestamp? = null
+    var tanggalKembali: Timestamp? = null,
+    var uidPeminjam: String? = null
 )
 
 data class RiwayatPeminjaman(
