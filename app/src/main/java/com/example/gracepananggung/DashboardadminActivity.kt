@@ -5,6 +5,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -20,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.type.Date
 import java.util.Calendar
+import java.util.Locale
 
 class DashboardAdminActivity : AppCompatActivity() {
 
@@ -59,6 +62,47 @@ class DashboardAdminActivity : AppCompatActivity() {
 
         ambilDataPeminjaman()
         setupSearch()
+    }
+
+    private fun cekPeminjamanJatuhTempo() {
+        val db = FirebaseFirestore.getInstance()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(java.util.Date())
+
+        db.collection("peminjaman")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (doc in documents) {
+                    val tanggalKembali = doc.getString("tanggalKembali")
+                    if (tanggalKembali == today) {
+                        val namaPeminjam = doc.getString("namaPeminjam") ?: "Pengguna"
+                        val buku = doc.getString("buku") ?: "buku"
+                        val userId = doc.getString("userId") ?: ""
+
+                        val pesanAdmin = "Buku '$buku' yang dipinjam oleh $namaPeminjam jatuh tempo hari ini."
+                        val pesanUser = "Pengembalian buku '$buku' jatuh tempo hari ini."
+
+                        val dataNotifAdmin = hashMapOf(
+                            "pesan" to pesanAdmin,
+                            "tanggal" to today,
+                            "untukAdmin" to true,
+                            "status" to "baru"
+                        )
+                        db.collection("notifikasi").add(dataNotifAdmin)
+
+                        val dataNotifUser = hashMapOf(
+                            "pesan" to pesanUser,
+                            "tanggal" to today,
+                            "untukAdmin" to false,
+                            "userId" to userId,
+                            "status" to "baru"
+                        )
+                        db.collection("notifikasi").add(dataNotifUser)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Notifikasi", "Gagal memeriksa peminjaman", it)
+            }
     }
 
     private fun ambilDataPeminjaman() {
@@ -141,6 +185,12 @@ class DashboardAdminActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.setting -> {
                 startActivity(Intent(this, SettingActivity::class.java))
+                true
+            }
+            R.id.menu_notifikasi -> {
+                val intent = Intent(this, NotifikasiActivity::class.java)
+                intent.putExtra("IS_ADMIN", true) // ganti true jika di DashboardAdminActivity
+                startActivity(intent)
                 true
             }
             R.id.logout -> {

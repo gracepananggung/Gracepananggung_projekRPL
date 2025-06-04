@@ -9,5 +9,9 @@
         android:id="@+id/logout"
         android:title="Logout"
         android:icon="@drawable/ic_logout" />
+    <item
+        android:id="@+id/menu_notifikasi"
+        android:title="Notifikasi"
+        android:icon="@drawable/ic_notification"/>
 
 </menu>

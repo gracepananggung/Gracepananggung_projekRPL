@@ -24,6 +24,13 @@ data class RiwayatPeminjaman(
     var tanggalDihapus: Timestamp? = null // waktu data dipindah ke riwayat
 )
 
+data class Notifikasi(
+    val pesan: String = "",
+    val tanggal: String = "",
+    val untukAdmin: Boolean = false,
+    val userId: String = "",
+    val status: String = "baru"
+)
 
 // Data untuk buku (tanpa gambar)
 data class Buku(

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -24,6 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gracepananggung"
         tools:targetApi="31">
+        <activity
+            android:name=".NotifikasiActivity"
+            android:exported="false" />
 
         <receiver android:name=".com.example.gracepananggung.NotificationReceiver" />
 
@@ -41,6 +42,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -79,7 +81,6 @@
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
-
     </application>
 
 </manifest>

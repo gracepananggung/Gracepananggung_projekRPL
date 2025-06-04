@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -74,6 +75,48 @@ class DashboardActivity2 : AppCompatActivity() {
             requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
         }
     }
+     //pengecekan notifikasi pengembalian buku
+     private fun cekPeminjamanJatuhTempo() {
+        val db = FirebaseFirestore.getInstance()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        db.collection("peminjaman")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (doc in documents) {
+                    val tanggalKembali = doc.getString("tanggalKembali")
+                    if (tanggalKembali == today) {
+                        val namaPeminjam = doc.getString("namaPeminjam") ?: "Pengguna"
+                        val buku = doc.getString("buku") ?: "buku"
+                        val userId = doc.getString("userId") ?: ""
+
+                        val pesanAdmin = "Buku '$buku' yang dipinjam oleh $namaPeminjam jatuh tempo hari ini."
+                        val pesanUser = "Pengembalian buku '$buku' jatuh tempo hari ini."
+
+                        val dataNotifAdmin = hashMapOf(
+                            "pesan" to pesanAdmin,
+                            "tanggal" to today,
+                            "untukAdmin" to true,
+                            "status" to "baru"
+                        )
+                        db.collection("notifikasi").add(dataNotifAdmin)
+
+                        val dataNotifUser = hashMapOf(
+                            "pesan" to pesanUser,
+                            "tanggal" to today,
+                            "untukAdmin" to false,
+                            "userId" to userId,
+                            "status" to "baru"
+                        )
+                        db.collection("notifikasi").add(dataNotifUser)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Notifikasi", "Gagal memeriksa peminjaman", it)
+            }
+    }
+
 
     private fun tampilkanDialogPinjamBuku() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.pinjambuku, null)
@@ -236,6 +279,12 @@ class DashboardActivity2 : AppCompatActivity() {
             }
             R.id.setting -> {
                 startActivity(Intent(this, SettingActivity::class.java))
+                true
+            }
+            R.id.menu_notifikasi -> {
+                val intent = Intent(this, NotifikasiActivity::class.java)
+                intent.putExtra("IS_ADMIN", false) // ganti true jika di DashboardAdminActivity
+                startActivity(intent)
                 true
             }
             R.id.logout -> {
